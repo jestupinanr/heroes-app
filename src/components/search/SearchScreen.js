@@ -1,84 +1,94 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import queryString from 'query-string'
+
 import { useForm } from '../../hook/UseForm';
 import { getHeroesByName } from '../../selectors/getHeroesByName';
 import { HeroCard } from '../hero/HeroCard';
-import  queryString  from 'query-string';
+
 
 export const SearchScreen = () => {
 
-  const navigate = useNavigate();
-  const location = useLocation();
+    const navigate = useNavigate();
+    const location = useLocation();
 
-  const { q='' } = queryString.parse(location.search);
-  
+    const { q = '' } = queryString.parse(location.search);
+    
+    const [ formValues, handleInputChange ] = useForm({
+        searchText: q,
+    });
 
-  const [ formValues, handleInputChange] = useForm({
-    searchText: q,
-  });
+    const { searchText } = formValues;
 
-  const {searchText} = formValues;
+    const heroesFileted = useMemo( () => getHeroesByName(q), [q] );
 
-  const heroesFilters =useMemo(()=>{getHeroesByName(q)}, [q]);
 
-  const handleSearch = (e)=>{
-    e.preventDefault();
-    navigate(`?q=${ searchText }`);
+    const handleSearch = (e) => {
+        e.preventDefault();
+        navigate(`?q=${ searchText }`)
+    }
 
-  }
 
-  return (
-    <>
-        <h1>Busqueda</h1>    
-        <hr />
+    return (
+        <>
+            <h1>Búsquedas</h1>
+            <hr />
 
-        <div className='row'>
-          <div className='col-5'>
-            <h4>Buscar</h4>
-            <hr/>
+            <div className="row">
 
-            <form onSubmit={handleSearch}>
-              <input 
-                type="text"
-                placeholder='Busca un heroe'
-                className="form-control"
-                name="searchText"
-                autoComplete='off'
-                onChange={handleInputChange}
-                value={searchText}
-              />
+                <div className="col-5">
+                    <h4>Buscar</h4>
+                    <hr />
 
-              <button
-                className='btn btn-outline-primary mt-1'
-                type='submit'
-                onClick={handleSearch}
-              >
-                Buscar
+                    <form onSubmit={ handleSearch }>
+                        <input 
+                            type="text"
+                            placeholder="Buscar un héroe"
+                            className="form-control"
+                            name="searchText"
+                            autoComplete="off"
+                            value={ searchText }
+                            onChange={ handleInputChange }
+                        />
 
-              </button>
-            </form>
-          </div>
-          <div className='col-7'>
-            <h4>Resultado</h4>
-            <hr/>
-            {
-              (q==='')
-              ? <div className='alert alert-info'>Busca un heroe</div>
-              : (heroesFilters.length === 0) 
-                && <div className='alert alert-danger'>No hay resultados: { q }</div>
-            }
 
-            {
-              heroesFilters.map(hero =>(
-                <HeroCard
-                  key = {hero.id}
-                  {...hero}
-                />
-              ))
-            }
-          </div>
+                        <button 
+                            className="btn btn-outline-primary mt-1"
+                            type="submit">
+                            Buscar...
+                        </button>
 
-        </div>
-    </>
-  )
+                    </form>
+
+
+                </div>
+
+                <div className="col-7">
+                    <h4>Resultados</h4>
+                    <hr />
+
+                    {
+                        (q === '')
+                            ? <div className="alert alert-info"> Buscar un héroe </div>
+                            : ( heroesFileted.length === 0 ) 
+                                && <div className="alert alert-danger"> No hay resultados: { q } </div>
+                    }
+
+
+                    {
+                        heroesFileted.map(hero => (
+                            <HeroCard 
+                                key={ hero.id }
+                                { ...hero }
+                            />
+                        ))
+                    }
+
+
+                </div>
+
+            </div>
+
+        </>
+    )
 }
