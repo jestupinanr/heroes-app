@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import { heroImages } from "../../helpers/heroImages";
 
 export const HeroCard = ({id, superhero, publisher, alter_ego, first_appearance, characters}) => {
-    const imagePath = `/assets/${id}.jpg`
+    // const imagePath = `/assets/${id}.jpg`
  
     return (
     <div className="col">
@@ -9,7 +10,7 @@ export const HeroCard = ({id, superhero, publisher, alter_ego, first_appearance,
             
             <div className="row no-gutters">
                 <div className="col-md-4">
-                    <img src={imagePath} className="card-img" alt={superhero} />
+                    <img src={heroImages(`./${id}.jpg`)} className="card-img" alt={superhero} />
                 </div>
                 <div className="col-8">
                     <div className="card-body">

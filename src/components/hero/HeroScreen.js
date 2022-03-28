@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { useParams, Navigate, useNavigate } from "react-router-dom"
+import { heroImages } from "../../helpers/heroImages";
 import { getHeroById } from "../../selectors/getHeroById";
+// import batman from '../../assets/dc-batman.jpg' estatico
+
 
 export const HeroScreen = () => {
 
@@ -25,13 +28,13 @@ export const HeroScreen = () => {
     navigate(-1);
   }
 
-  const imagePat = `/assets/${id}.jpg`;
-
   return (
     <div className="row mt-5">
       <div className="col-4">
         <img 
-          src={imagePat}
+          // src={imagePat}
+          // src={ batman } import
+          src={ heroImages(`./${id}.jpg`)}
           alt={ hero.superhero}
           className="img-thumbnail animate__animated animate__fadeInLeft"
         />
